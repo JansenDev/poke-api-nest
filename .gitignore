@@ -1,7 +1,11 @@
 # compiled output
 /dist
 /node_modules
+
+# custom
 package-lock.json
+mongodb_data
+
 # Logs
 logs
 *.log
