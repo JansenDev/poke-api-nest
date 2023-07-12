@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
-import { Model, isValidObjectId } from 'mongoose';
+import { Model, Types, isValidObjectId } from 'mongoose';
 import { Pokemon } from './entities/pokemon.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { isNumber } from 'class-validator';
@@ -25,22 +25,16 @@ export class PokemonService {
       const pokemon = await this.pokemonModel.create(createPokemonDto);
       return pokemon;
     } catch (error) {
-      if (error.code === 11000) {
-        throw new BadRequestException(
-          `Pokemon exist in db. ${JSON.stringify(error.keyValue)} `,
-        );
-      }
-      console.log(error);
-      throw new InternalServerErrorException();
+      this.handleException(error);
     }
   }
 
   async findAll() {
-    return `This action returns all pokemon`;
+    return await this.pokemonModel.find();
   }
 
   async findOne(value: string) {
-    let pokemonFound = null;
+    let pokemonFound: Pokemon & { _id: Types.ObjectId } = null;
 
     if (isNumber(Number(value))) {
       pokemonFound = await this.pokemonModel.findOne({
@@ -68,11 +62,32 @@ export class PokemonService {
     return pokemonFound;
   }
 
-  update(id: number, updatePokemonDto: UpdatePokemonDto) {
-    return `This action updates a #${id} pokemon`;
+  async update(value: string, updatePokemonDto: UpdatePokemonDto) {
+    const pokemonFound = await this.findOne(value);
+
+    if (pokemonFound.name)
+      pokemonFound.name = pokemonFound.name.toLocaleLowerCase();
+    try {
+      const result = await this.pokemonModel.updateOne(updatePokemonDto);
+      console.log({ result });
+      return { ...pokemonFound.toJSON(), ...updatePokemonDto };
+    } catch (error) {
+      this.handleException(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pokemon`;
+  async remove(value: string) {
+    const pokemonFound = await this.findOne(value);
+    await this.pokemonModel.deleteOne({ _id: pokemonFound._id });
+  }
+
+  private handleException(error: any) {
+    if (error.code === 11000) {
+      throw new BadRequestException(
+        `Duplicate unique field ${JSON.stringify(error.keyValue)}`,
+      );
+    }
+    console.log(error);
+    throw new InternalServerErrorException();
   }
 }
