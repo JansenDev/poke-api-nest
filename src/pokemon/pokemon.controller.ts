@@ -12,6 +12,7 @@ import {
 import { PokemonService } from './pokemon.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
+import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id/parse-mongo-id.pipe';
 
 @Controller('pokemon')
 export class PokemonController {
@@ -35,7 +36,7 @@ export class PokemonController {
 
   @Patch(':value')
   update(
-    @Param('value') value: string,
+    @Param('value', ParseMongoIdPipe) value: string,
     @Body() updatePokemonDto: UpdatePokemonDto,
   ) {
     return this.pokemonService.update(value, updatePokemonDto);

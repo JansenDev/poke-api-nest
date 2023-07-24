@@ -4,6 +4,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { PokemonModule } from './pokemon/pokemon.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CommonModule } from './common/common.module';
 
 const MONGO_URI = 'mongodb://127.0.0.1:27017/nest-pokemon';
 @Module({
@@ -13,6 +14,7 @@ const MONGO_URI = 'mongodb://127.0.0.1:27017/nest-pokemon';
     }),
     MongooseModule.forRoot(MONGO_URI),
     PokemonModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [],
