@@ -10,6 +10,7 @@ import { Model, Types, isValidObjectId } from 'mongoose';
 import { Pokemon } from './entities/pokemon.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { isNumber } from 'class-validator';
+import { PaginationDto } from 'src/common/interfaces/dto/pagination.dto';
 
 @Injectable()
 export class PokemonService {
@@ -29,8 +30,10 @@ export class PokemonService {
     }
   }
 
-  async findAll() {
-    return await this.pokemonModel.find();
+  async findAll({ limit = 4, offset = 0 }: PaginationDto) {
+    return await this.pokemonModel.find().skip(offset).limit(limit).sort({
+      no: 1,
+    });
   }
 
   async findOne(value: string) {
