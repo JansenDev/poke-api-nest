@@ -1,11 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { configs } from './config/config.config';
 
 async function bootstrap() {
+  const enviroments = configs();
   const app = await NestFactory.create(AppModule, {
-    // snapshot: true,
-    cors: { allowedHeaders: '*', origin: '*' },
+    cors: {
+      allowedHeaders: enviroments.APP.CORS.ALLOWEDHEADERS,
+      origin: enviroments.APP.CORS.ORIGIN,
+    },
   });
   app.setGlobalPrefix('api/v2');
   app.useGlobalPipes(
@@ -18,6 +22,6 @@ async function bootstrap() {
       },
     }),
   );
-  await app.listen(3000);
+  await app.listen(enviroments.APP.PORT);
 }
 bootstrap();

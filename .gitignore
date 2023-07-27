@@ -5,6 +5,7 @@
 # custom
 package-lock.json
 mongodb_data
+.env
 
 # Logs
 logs

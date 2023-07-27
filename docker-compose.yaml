@@ -10,3 +10,17 @@ services:
       - MONGO_INITDB_DATABASE=nest-pokemon
     volumes:
       - ./mongodb_data:/data/db
+  app:
+    container_name: poke-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '${PORT}:${PORT}'
+    environment:
+      - MONGODB=${MONGODB}
+      - PORT=${PORT}
+      - DEFAULT_LIMIT= ${DEFAULT_LIMIT}
+    depends_on:
+      - mongo
+    restart: always
