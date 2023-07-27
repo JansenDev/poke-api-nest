@@ -9,7 +9,6 @@ import {
   HttpCode,
   HttpStatus,
   Query,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
@@ -29,8 +28,6 @@ export class PokemonController {
 
   @Get()
   findAll(@Query() pagination: PaginationDto) {
-    console.log({ pagination });
-
     return this.pokemonService.findAll(pagination);
   }
 

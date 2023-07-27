@@ -9,12 +9,18 @@ import { SeedModule } from './seed/seed.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { configs } from './config/config.config';
+import { configSchema } from './config/config.validation';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      // isGlobal: true,
+      isGlobal: true,
       load: [configs],
+      validationSchema: configSchema,
+      validationOptions: {
+        allowUnknown: true,
+        // abortEarly: true,
+      },
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
@@ -32,10 +38,11 @@ export class AppModule {
   constructor() {
     const logger = new Logger('NestApplication');
     const enviroment = configs();
+    // console.log(enviroment);
 
     logger.log(`[DB]: Database up on ${enviroment.DB.MONGO.URI}`);
-    logger.log( `[APP]: Server Up on port  http://localhost:${enviroment.APP.PORT}`, );
-    console.log({tz: process.env.TZ});
-    
+    logger.log(
+      `[APP]: Server Up on port  http://localhost:${enviroment.APP.PORT}`,
+    );
   }
 }
