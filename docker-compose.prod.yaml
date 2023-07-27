@@ -20,11 +20,11 @@ services:
     ports:
       - '${APP_PORT}:${APP_PORT}'
     environment:
-      - DB_MONGO_URI=mongodb://127.0.0.1:27017/nest-pokemon
-      - APP_PORT=3000
-      - CONSTANTS_PAGINATION_LIMIT=4
-      - APP_CORS_ORIGIN=*
-      - APP_CORS_ALLOWEDHEADERS=*
+      - DB_MONGO_URI=${DB_MONGO_URI}
+      - APP_PORT=${APP_PORT}
+      - CONSTANTS_PAGINATION_LIMIT=${CONSTANTS_PAGINATION_LIMIT}
+      - APP_CORS_ORIGIN=${APP_CORS_ORIGIN}
+      - APP_CORS_ALLOWEDHEADERS=${APP_CORS_ORIGIN}
     depends_on:
       - mongo
     restart: always
