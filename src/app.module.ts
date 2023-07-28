@@ -6,7 +6,6 @@ import { PokemonModule } from './pokemon/pokemon.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
-import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { configs } from './config/config.config';
 import { configSchema } from './config/config.validation';
@@ -27,12 +26,11 @@ import { configSchema } from './config/config.validation';
     }),
     MongooseModule.forRoot(configs().DB.MONGO.URI),
     PokemonModule,
-    CommonModule,
     SeedModule,
-    HttpModule,
   ],
   controllers: [AppController],
   providers: [],
+  exports: [],
 })
 export class AppModule {
   constructor() {
